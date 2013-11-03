@@ -1,0 +1,35 @@
+<project name="ADF Logger Adapter" basedir="." default="build_all">
+    <property file="build.properties"/>
+    <property name="src.dir" value="src"/>
+    <property name="classes.dir" value="classes"/>
+    <property name="jar.dir" value="deploy"/>
+    <property name="adf.logger.jar.name" value="slf4j-adflogger-0.1"/>
+    <path id="classpath">
+        <fileset dir="${adf.modules.lib.dir}/oracle.adf.share.ca_11.1.1">
+            <filename name="adf-share-base.jar"/>
+        </fileset>
+        <pathelement location="${slf4j.path}"/>
+        <pathelement location="${junit4.path}"/> <!--Optional, for the TestCase-->
+    </path>
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+    </target>
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}"
+               classpathref="classpath">
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+    </target>
+    <target name="build_logger" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${adf.logger.jar.name}.jar">
+            <fileset dir="${classes.dir}">
+                <include name="org/**"/>
+            </fileset>
+        </jar>
+    </target>
+    <target name="build_all" depends="build_logger"/>
+</project>
